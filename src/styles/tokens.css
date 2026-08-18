@@ -1,0 +1,64 @@
+@layer tokens {
+  :root {
+    /* Drives native form controls, scrollbars and ::selection, and is the only
+       thing the theme switch will need to change. */
+    color-scheme: light dark;
+
+    --bg: light-dark(oklch(99% 0 0), oklch(15% 0.01 260));
+    --surface: light-dark(oklch(97% 0.004 260), oklch(21% 0.015 260));
+    --border: light-dark(oklch(89% 0.006 260), oklch(31% 0.015 260));
+    --fg: light-dark(oklch(20% 0.02 260), oklch(96% 0.005 260));
+    --fg-muted: light-dark(oklch(50% 0.02 260), oklch(68% 0.02 260));
+    --accent: light-dark(oklch(58% 0.13 195), oklch(76% 0.13 195));
+    --ok: light-dark(oklch(52% 0.14 150), oklch(76% 0.15 150));
+    --warn: light-dark(oklch(55% 0.18 25), oklch(72% 0.17 25));
+
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.5rem;
+    --space-6: 2rem;
+
+    --radius-lg: 1rem;
+
+    /* Space Grotesk and Kode Mono are added in the fonts commit. */
+    --font-sans: system-ui, sans-serif;
+    --font-mono: ui-monospace, monospace;
+  }
+
+  /* A manual choice only has to flip color-scheme; every token above follows. */
+  [data-theme="light"] {
+    color-scheme: light;
+  }
+
+  [data-theme="dark"] {
+    color-scheme: dark;
+  }
+
+  /* iOS 16 and other pre-light-dark() browsers: the only place tokens are duplicated. */
+  @supports not (color: light-dark(white, black)) {
+    :root {
+      --bg: oklch(99% 0 0);
+      --surface: oklch(97% 0.004 260);
+      --border: oklch(89% 0.006 260);
+      --fg: oklch(20% 0.02 260);
+      --fg-muted: oklch(50% 0.02 260);
+      --accent: oklch(58% 0.13 195);
+      --ok: oklch(52% 0.14 150);
+      --warn: oklch(55% 0.18 25);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: oklch(15% 0.01 260);
+        --surface: oklch(21% 0.015 260);
+        --border: oklch(31% 0.015 260);
+        --fg: oklch(96% 0.005 260);
+        --fg-muted: oklch(68% 0.02 260);
+        --accent: oklch(76% 0.13 195);
+        --ok: oklch(76% 0.15 150);
+        --warn: oklch(72% 0.17 25);
+      }
+    }
+  }
+}

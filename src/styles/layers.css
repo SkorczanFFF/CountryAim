@@ -1,0 +1,3 @@
+/* Layer order must be declared before any rule, or the cascade takes its order
+   from first use instead. This file is imported first in main.tsx. */
+@layer reset, tokens, base, components, overrides;

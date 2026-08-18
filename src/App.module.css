@@ -1,0 +1,21 @@
+@layer components {
+  .app {
+    display: grid;
+    gap: var(--space-5);
+    max-inline-size: 40rem;
+    margin-inline: auto;
+  }
+
+  .title {
+    font-size: clamp(1.75rem, 8vw, 2.5rem);
+  }
+
+  .lede {
+    color: var(--fg-muted);
+  }
+
+  .version {
+    font-family: var(--font-mono);
+    color: var(--accent);
+  }
+}
