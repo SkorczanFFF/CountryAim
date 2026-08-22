@@ -21,9 +21,10 @@
 
     --radius-lg: 1rem;
 
-    /* Space Grotesk and Kode Mono are added in the fonts commit. */
-    --font-sans: system-ui, sans-serif;
-    --font-mono: ui-monospace, monospace;
+    /* The "Variable" suffix is part of the family name Fontsource registers; drop
+       it and the browser silently falls back to the next stack entry. */
+    --font-sans: "Space Grotesk Variable", system-ui, sans-serif;
+    --font-mono: "Kode Mono Variable", ui-monospace, monospace;
   }
 
   /* A manual choice only has to flip color-scheme; every token above follows. */

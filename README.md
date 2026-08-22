@@ -110,6 +110,7 @@ Chrome first.
 | CSS build | Lightning CSS | Compiles nesting and `light-dark()` down to the browserslist targets, so the source stays modern without shipping a hand-written fallback |
 | Routing | wouter | Two routes; 2 KB instead of 16 KB |
 | Lint + format | Biome | One Rust binary replacing ESLint, Prettier and six plugins. Replaces the scaffolder's oxlint, which formats nothing |
+| Fonts | Space Grotesk (text) + Kode Mono (digits) | Self-hosted with Fontsource, so no request leaves the device and nothing depends on Google Fonts |
 | Package manager | pnpm | Exact pinning, strict engine checks, fast installs |
 
 ### Browser support

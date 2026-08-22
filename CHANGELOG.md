@@ -44,6 +44,14 @@ versions may contain breaking changes.
 - Lightning CSS as the CSS transformer, with targets read from the new `browserslist` field in
   `package.json` so they have one source of truth. `build.cssMinify` is deliberately not set:
   Vite already minifies with Lightning CSS when it is the transformer.
+- Space Grotesk for text and Kode Mono for digits, self-hosted through Fontsource variable
+  packages and wired to `--font-sans` and `--font-mono`. Each family ships a single
+  `wght.css` covering every subset, so one import per family is enough and `unicode-range`
+  decides what a browser actually downloads. Polish diacritics live in `latin-ext` rather
+  than `latin`, so a Polish interface pulls two files per family instead of one. The weight
+  axes are 300-700 for Space Grotesk and 400-700 for Kode Mono, so a lighter monospace
+  weight does not exist. Space Grotesk also ships a Vietnamese subset no client will ever
+  request; the package exposes no per-subset entry point, so it stays on the CDN unused.
 
 ### Changed
 

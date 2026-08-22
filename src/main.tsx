@@ -3,6 +3,8 @@ import '~/styles/layers.css';
 import '~/styles/reset.css';
 import '~/styles/tokens.css';
 import '~/styles/base.css';
+import '@fontsource-variable/space-grotesk/wght.css';
+import '@fontsource-variable/kode-mono/wght.css';
 
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
