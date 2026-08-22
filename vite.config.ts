@@ -1,6 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import react from '@vitejs/plugin-react';
+import browserslist from 'browserslist';
+import { browserslistToTargets } from 'lightningcss';
 import { defineConfig } from 'vitest/config';
 
 const pkg = JSON.parse(
@@ -8,6 +10,9 @@ const pkg = JSON.parse(
 ) as {
   version: string;
 };
+
+// Reads the browserslist field from package.json, so targets have one source of truth.
+const targets = browserslistToTargets(browserslist());
 
 export default defineConfig({
   plugins: [react()],
@@ -21,10 +26,13 @@ export default defineConfig({
       },
     ],
   },
+  css: {
+    transformer: 'lightningcss',
+    lightningcss: { targets },
+  },
   test: {
     environment: 'happy-dom',
     globals: true,
     setupFiles: ['./src/setupTests.ts'],
-    include: ['src/**/*.test.{ts,tsx}'],
   },
 });

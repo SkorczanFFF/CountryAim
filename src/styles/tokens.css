@@ -34,31 +34,4 @@
   [data-theme="dark"] {
     color-scheme: dark;
   }
-
-  /* iOS 16 and other pre-light-dark() browsers: the only place tokens are duplicated. */
-  @supports not (color: light-dark(white, black)) {
-    :root {
-      --bg: oklch(99% 0 0);
-      --surface: oklch(97% 0.004 260);
-      --border: oklch(89% 0.006 260);
-      --fg: oklch(20% 0.02 260);
-      --fg-muted: oklch(50% 0.02 260);
-      --accent: oklch(58% 0.13 195);
-      --ok: oklch(52% 0.14 150);
-      --warn: oklch(55% 0.18 25);
-    }
-
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: oklch(15% 0.01 260);
-        --surface: oklch(21% 0.015 260);
-        --border: oklch(31% 0.015 260);
-        --fg: oklch(96% 0.005 260);
-        --fg-muted: oklch(68% 0.02 260);
-        --accent: oklch(76% 0.13 195);
-        --ok: oklch(76% 0.15 150);
-        --warn: oklch(72% 0.17 25);
-      }
-    }
-  }
 }

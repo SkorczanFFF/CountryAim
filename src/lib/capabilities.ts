@@ -7,7 +7,7 @@ type CapabilityId =
   | 'videoFrameCallback'
   | 'cssProperty'
   | 'allowDiscrete'
-  | 'popover'
+  | 'dialog'
   | 'viewTransitions'
   | 'vibration';
 
@@ -43,7 +43,8 @@ export function probeCapabilities(): Capability[] {
       id: 'cssLightDark',
       label: 'CSS light-dark()',
       supported: CSS.supports('color', 'light-dark(white, black)'),
-      required: true,
+      // Lightning CSS downlevels it, so its absence changes nothing at runtime.
+      required: false,
     },
     {
       id: 'barcodeDetector',
@@ -70,9 +71,9 @@ export function probeCapabilities(): Capability[] {
       required: false,
     },
     {
-      id: 'popover',
-      label: 'Popover API',
-      supported: 'popover' in HTMLElement.prototype,
+      id: 'dialog',
+      label: '<dialog> showModal()',
+      supported: 'showModal' in HTMLDialogElement.prototype,
       required: false,
     },
     {

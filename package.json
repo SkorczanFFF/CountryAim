@@ -34,9 +34,18 @@
     "@types/react": "19.2.18",
     "@types/react-dom": "19.2.4",
     "@vitejs/plugin-react": "6.0.5",
+    "browserslist": "4.28.8",
     "happy-dom": "20.11.2",
+    "lightningcss": "1.33.0",
     "typescript": "6.0.3",
     "vite": "8.2.1",
     "vitest": "4.1.10"
-  }
+  },
+  "browserslist": [
+    "safari >= 16.4",
+    "ios_saf >= 16.4",
+    "chrome >= 111",
+    "edge >= 111",
+    "firefox >= 113"
+  ]
 }

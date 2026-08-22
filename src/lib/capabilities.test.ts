@@ -18,7 +18,7 @@ describe('selectMissingRequired', () => {
     const missing = selectMissingRequired([
       { id: 'getUserMedia', label: 'a', supported: false, required: true },
       { id: 'webAssembly', label: 'b', supported: true, required: true },
-      { id: 'popover', label: 'c', supported: false, required: false },
+      { id: 'dialog', label: 'c', supported: false, required: false },
     ]);
 
     expect(missing.map((capability) => capability.id)).toEqual([

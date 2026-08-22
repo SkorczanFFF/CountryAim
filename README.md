@@ -45,9 +45,6 @@ rest of what the app is built on — before thirty commits are stacked on those 
 `public/favicon.svg` carries the app mark — barcode strokes inside a crosshair ring — replacing
 the Vite logo that the scaffolder ships. The PWA icon set (192/512/maskable) is still to come.
 
-See [`PLAN.md`](./PLAN.md) for the full design, the milestone breakdown and every technology
-decision with its rationale and rejected alternatives.
-
 ---
 
 ## Quick start
@@ -109,19 +106,30 @@ Chrome first.
 | Build | Vite 8 | The app is 100% client-side; SSR would be pure overhead |
 | UI | React 19 | — |
 | Types | TypeScript 6.0.3 | The version the Vite template pins. TypeScript 7 (the native Go port) is `latest` and passes here, but the ecosystem has not moved yet |
-| Styling | Native CSS, no framework | `light-dark()`, `@layer`, `@property`, `@starting-style`, container queries and `:has()` cover everything a framework would, and remove more dependencies than they add |
+| Styling | Native CSS, no framework | `light-dark()`, `@layer`, `@property`, `@starting-style` and `:has()` cover everything a framework would, and remove more dependencies than they add |
+| CSS build | Lightning CSS | Compiles nesting and `light-dark()` down to the browserslist targets, so the source stays modern without shipping a hand-written fallback |
 | Routing | wouter | Two routes; 2 KB instead of 16 KB |
 | Lint + format | Biome | One Rust binary replacing ESLint, Prettier and six plugins. Replaces the scaffolder's oxlint, which formats nothing |
 | Package manager | pnpm | Exact pinning, strict engine checks, fast installs |
 
-Full reasoning, including what was rejected and why, is in [`PLAN.md`](./PLAN.md) §4.
-
 ### Browser support
 
-The floor is **iOS/Safari 17.5+, Chrome 123+, Firefox 129+**, set by `light-dark()` and
-`@starting-style`. Older browsers get a ~20-line token fallback; newer-still features
-(View Transitions, `interpolate-size`) degrade silently to no animation rather than no
+```
+safari >= 16.4, ios_saf >= 16.4, chrome >= 111, edge >= 111, firefox >= 113
+```
+
+Declared once in the `browserslist` field of `package.json` and read from there by Lightning CSS,
+so targets have a single source of truth.
+
+The floor is set by `@property`, `color-mix()` and media range syntax, which all land at Safari
+16.4. Native nesting and `light-dark()` are written normally in source and compiled down by
+Lightning CSS, so supporting older Safari costs nothing in the stylesheets. What genuinely
+degrades below the floor is animation only: `@starting-style` (no entry animation), View
+Transitions (no scanner-to-result morph) and `interpolate-size`. None of them remove
 functionality.
+
+Note that the Popover API needs Safari 17, above our floor, so dialogs use `<dialog>` with
+`showModal()` rather than `popover`.
 
 ---
 
@@ -135,7 +143,7 @@ functionality.
 - **`src/lib/` never imports React.** Domain logic stays pure and testable without a DOM.
   Enforced by a `noRestrictedImports` override in `biome.json`, not just documented here.
 - **Conventional Commits**, one commit per functional unit, each leaving the repo in a working
-  state. The milestone-by-milestone commit list is in `PLAN.md` §10.
+  state.
 - **[`CHANGELOG.md`](./CHANGELOG.md)** follows Keep a Changelog and is updated in the same commit
   as the change it describes.
 - **Essential comments only.** Comments explain *why*, record a browser quirk, or warn about a
@@ -160,7 +168,7 @@ src/
 ```
 
 Still to come, each created by the commit that first fills it — empty directories are not
-placeheld, since the shape is documented here and in `PLAN.md` §5:
+placeheld, since the shape is documented here:
 
 ```
 scanner/   camera lifecycle, decoder abstraction, scan loop, frame capture

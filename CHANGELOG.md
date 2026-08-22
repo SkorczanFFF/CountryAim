@@ -20,13 +20,13 @@ versions may contain breaking changes.
 - `__APP_VERSION__` build-time constant, sourced from `package.json`.
 - Device capability probe as the placeholder screen: secure context, `getUserMedia`, native
   `BarcodeDetector`, `requestVideoFrameCallback`, WebAssembly, `light-dark()`, `@property`,
-  `allow-discrete`, Popover API, View Transitions and the Vibration API. Lets a real test device
+  `allow-discrete`, `<dialog>`, View Transitions and the Vibration API. Lets a real test device
   be checked before any scanner code exists.
 - `strict` and `noUncheckedIndexedAccess` in `tsconfig.app.json`; the scaffolder omits both, and
   the GS1 prefix table work depends on safe indexing.
 - Application structure: `lib/` for React-free domain logic, `hooks/`, `components/` with
   co-located CSS modules, and `styles/`. Directories are created by the commit that first fills
-  them; the intended shape is documented in the README and PLAN.md rather than mocked up with
+  them; the intended shape is documented in the README rather than mocked up with
   empty placeholders.
 - A Biome override forbidding React imports under `src/lib`, with a message explaining why.
   The layering rule is now enforced by the linter instead of living only in documentation.
@@ -34,18 +34,33 @@ versions may contain breaking changes.
   `main.tsx`. The `prefers-reduced-motion` block lives in the last layer, which lets it beat every
   component animation without a single `!important`.
 - Design tokens in `styles/tokens.css`: `light-dark()` pairs in `oklch()`, so each colour is
-  defined once instead of three times, plus the cyan accent, spacing and radius scales. A
-  `@supports not (color: light-dark(...))` block covers pre-2024 browsers.
+  defined once instead of three times, plus the cyan accent, spacing and radius scales. Older
+  browsers are covered by Lightning CSS, not by a hand-written fallback.
 - Capability probe split into `lib/capabilities.ts` (pure, no React), `hooks/useCapabilities.ts`
   and a `CapabilityReport` component with its own CSS module.
 - Vitest with happy-dom, Testing Library and jest-dom matchers, wired through `src/setupTests.ts`.
   `pnpm test` runs five tests covering the probe and the rendered app.
-- `PLAN.md` with the full design, technology decisions, commit plan and the complete GS1 prefix
-  table.
 - `README.md` covering setup, phone testing over HTTPS, conventions and the GS1 prefix caveat.
+- Lightning CSS as the CSS transformer, with targets read from the new `browserslist` field in
+  `package.json` so they have one source of truth. `build.cssMinify` is deliberately not set:
+  Vite already minifies with Lightning CSS when it is the transformer.
 
 ### Changed
 
+- Lowered the browser floor from Safari 17.5 to **Safari/iOS 16.4** (Chrome 111, Firefox 113).
+  Measurements showed Lightning CSS compiles both native nesting and `light-dark()` down to that
+  target, so older Safari costs nothing in the stylesheets, while the scanner itself only needs
+  Safari 15.4. Holding the floor at 17.5 would have excluded users purely over CSS cosmetics.
+  Everything that degrades below the floor is animation: `@starting-style`, View Transitions and
+  `interpolate-size`.
+- The settings panel will use `<dialog>` with `showModal()` instead of the Popover API, which
+  requires Safari 17 and is therefore above the new floor. `<dialog>` gives the same top layer,
+  focus trap, Esc handling and `::backdrop`; only light-dismiss has to be added by hand.
+- The capability probe follows from both changes above: `light-dark()` is no longer marked
+  required, because Lightning CSS downlevels it and a device without it renders correctly, so
+  requiring it would have shown a blocking "the scanner will not work" alert on a working
+  device. Its Popover row is replaced by a `<dialog>` / `showModal()` row, since nothing in
+  the app uses `popover` any more.
 - Replaced the scaffolder's `oxlint` with Biome. oxlint only lints; Biome also formats, so it
   removes the need for a separate formatter.
 - Replaced `public/favicon.svg` with the app's own mark: barcode strokes inside a crosshair ring.
@@ -61,6 +76,11 @@ versions may contain breaking changes.
 
 ### Removed
 
+- The hand-written `@supports not (color: light-dark(...))` fallback in `styles/tokens.css`.
+  Lightning CSS generates an equivalent automatically, using a custom-property toggle, and it
+  detects the `[data-theme]` selectors on its own so the manual theme switch keeps working on old
+  browsers. The generated version cannot drift out of sync the way a duplicated token block can.
+  Built CSS dropped from 3.89 kB to 3.35 kB even though it now carries the fallbacks.
 - Scaffolder demo page and its assets: `src/App.css`, `src/index.css`, `src/assets/*` and
   `public/icons.svg`, replaced by this project's own layered stylesheet and components.
   `src/assets/hero.png` would otherwise have sat in git history permanently for no reason.
@@ -77,6 +97,10 @@ versions may contain breaking changes.
   block, which the layer architecture made unnecessary.
 - Biome's `files.includes` excludes `public`, because `lint/a11y/noSvgWithoutTitle` fires on the
   standalone favicon — a rule meant for inline SVG in components.
+- Vite runs CSS through Lightning CSS twice (transform, then minify), so the theme toggle
+  declarations appear duplicated in the output. They are idempotent and about 60 bytes before
+  compression. `cssMinify: 'esbuild'` would avoid it, but Vite 8 builds on Rolldown and no longer
+  ships esbuild, so that would mean adding a dependency to save 60 bytes.
 - Deployment target is Vercel. Three things to verify on the first deploy: that the build image
   supports pnpm 11 via the `packageManager` field, that `pnpm-workspace.yaml` in a single-package
   repo is not treated as a monorepo root, and that the Node version satisfies `engines` given
