@@ -1,3 +1,4 @@
+import { t } from '~/i18n/t';
 import type { Capability } from '~/lib/capabilities';
 import styles from './CapabilityReport.module.css';
 
@@ -14,10 +15,12 @@ function CapabilityRow({ capability }: CapabilityRowProps) {
 
   return (
     <li className={styles.row}>
-      <span className={styles.dot} data-state={state} />
+      {/* Bar length carries the state as well as colour does, so the list still
+          reads when the two reds are indistinguishable. */}
+      <span className={styles.mark} data-state={state} />
       <span className={styles.label}>{capability.label}</span>
       <span className={styles.tag}>
-        {capability.required ? 'required' : 'optional'}
+        {capability.required ? t('probe.required') : t('probe.optional')}
       </span>
     </li>
   );
@@ -34,12 +37,11 @@ export function CapabilityReport({
 }: CapabilityReportProps) {
   return (
     <section className={styles.panel}>
-      <h2 className={styles.heading}>Device capabilities</h2>
+      <h2 className={styles.heading}>{t('probe.heading')}</h2>
 
       {missingRequired.length > 0 && (
         <p className={styles.alert} role="alert">
-          {missingRequired.length} required feature(s) missing. The scanner will
-          not work on this device.
+          {t('probe.missing')}
         </p>
       )}
 

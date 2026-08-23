@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createDetector, type Scan } from './detector';
 import { sourceRect } from './roi';
 
@@ -28,7 +28,8 @@ function scheduler(video: HTMLVideoElement, tick: () => void): Schedule {
 export function useScanLoop(
   video: HTMLVideoElement | null,
   onScan: (scan: Scan) => void,
-): void {
+): 'native' | 'wasm' | undefined {
+  const [backend, setBackend] = useState<'native' | 'wasm'>();
   const onScanRef = useRef(onScan);
   onScanRef.current = onScan;
 
@@ -45,7 +46,9 @@ export function useScanLoop(
     const context = canvas.getContext('2d', { willReadFrequently: true });
 
     createDetector().then((ready) => {
-      if (!stopped) detector = ready;
+      if (stopped) return;
+      detector = ready;
+      setBackend(ready.backend);
     });
 
     const tick = () => {
@@ -104,4 +107,6 @@ export function useScanLoop(
       pending?.cancel();
     };
   }, [video]);
+
+  return backend;
 }

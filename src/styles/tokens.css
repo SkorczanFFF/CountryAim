@@ -4,22 +4,36 @@
        thing the theme switch will need to change. */
     color-scheme: light dark;
 
-    --bg: light-dark(oklch(99% 0 0), oklch(15% 0.01 260));
-    --surface: light-dark(oklch(97% 0.004 260), oklch(21% 0.015 260));
-    --border: light-dark(oklch(89% 0.006 260), oklch(31% 0.015 260));
-    --fg: light-dark(oklch(20% 0.02 260), oklch(96% 0.005 260));
-    --fg-muted: light-dark(oklch(50% 0.02 260), oklch(68% 0.02 260));
-    --accent: light-dark(oklch(58% 0.13 195), oklch(76% 0.13 195));
-    --ok: light-dark(oklch(52% 0.14 150), oklch(76% 0.15 150));
-    --warn: light-dark(oklch(55% 0.18 25), oklch(72% 0.17 25));
+    /* Cool near-monochrome: the one saturated colour in the app is the laser,
+       so nothing else competes with the reading. */
+    --bg: light-dark(oklch(96% 0.004 250), oklch(15% 0.012 250));
+    --surface: light-dark(oklch(99% 0.002 250), oklch(19% 0.014 250));
+    --border: light-dark(oklch(85% 0.006 250), oklch(30% 0.014 250));
+    --fg: light-dark(oklch(22% 0.012 250), oklch(92% 0.006 250));
+    --fg-muted: light-dark(oklch(52% 0.01 250), oklch(64% 0.01 250));
 
-    --space-2: 0.5rem;
-    --space-3: 0.75rem;
-    --space-4: 1rem;
-    --space-5: 1.5rem;
-    --space-6: 2rem;
+    /* Unthemed: both sit on the camera stage, which is video on black either
+       way. Red is what a scanner actually emits, and it means one thing here —
+       the instrument is measuring. */
+    --laser: oklch(62% 0.23 27);
+    /* Hex, not oklch: this has to match the mark in favicon.svg exactly. */
+    --aim: #22c3d6;
+    /* The same colour for themed text. Straight --aim on a light background is
+       about 2:1 against it, which is not enough for a heading. */
+    --aim-ink: light-dark(oklch(52% 0.11 205), #22c3d6);
+    --chrome: oklch(92% 0.006 250);
 
-    --radius-lg: 1rem;
+    /* One module is the narrowest bar in an EAN symbol. Every step below is a
+       module count from the encoding: 3 is a guard pattern, 5 the centre guard,
+       7 one encoded digit. */
+    --module: 3px;
+    --space-2: 6px;
+    --space-3: 9px;
+    --space-4: 15px;
+    --space-5: 21px;
+    --space-6: 42px;
+
+    --radius: 3px;
 
     /* The "Variable" suffix is part of the family name Fontsource registers; drop
        it and the browser silently falls back to the next stack entry. */

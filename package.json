@@ -1,6 +1,6 @@
 {
   "name": "countryaim",
-  "version": "0.3.3",
+  "version": "0.3.6",
   "private": true,
   "type": "module",
   "description": "Scan a barcode with your phone camera and see which country issued it.",
@@ -26,6 +26,7 @@
     "@fontsource-variable/kode-mono": "5.3.0",
     "@fontsource-variable/space-grotesk": "5.3.0",
     "barcode-detector": "3.2.2",
+    "country-flag-icons": "1.6.20",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "zxing-wasm": "3.1.3"

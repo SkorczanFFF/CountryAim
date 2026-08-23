@@ -1,8 +1,11 @@
 import { useState } from 'react';
 import { CameraView } from '~/components/CameraView/CameraView';
 import { CapabilityReport } from '~/components/CapabilityReport/CapabilityReport';
+import { Flags } from '~/components/Flags/Flags';
+import { Readout } from '~/components/Readout/Readout';
 import { ScannerOverlay } from '~/components/ScannerOverlay/ScannerOverlay';
 import { useCapabilities } from '~/hooks/useCapabilities';
+import { describeReading } from '~/i18n/reading';
 import { t } from '~/i18n/t';
 import type { Scan } from '~/scanner/detector';
 import { useCamera } from '~/scanner/useCamera';
@@ -15,21 +18,43 @@ export default function App() {
   const [video, setVideo] = useState<HTMLVideoElement | null>(null);
   const [scan, setScan] = useState<Scan | null>(null);
 
-  useScanLoop(video, setScan);
+  const decoder = useScanLoop(video, setScan);
+  const reading = scan && describeReading(scan);
 
   if (camera.status === 'ready') {
     return (
       <CameraView stream={camera.stream} onVideo={setVideo}>
         <ScannerOverlay />
-        {/* Raw reading for now; the frozen frame and the country arrive next. */}
-        {scan && <p className={styles.reading}>{scan.value}</p>}
+        <p className={styles.mark}>
+          <img className={styles.brand} src="/favicon.svg" alt="" />
+          {t('app.name')}
+        </p>
+        {reading ? (
+          // Keyed on the code so a new reading replays both entrances.
+          <>
+            <Flags key={`f${scan?.value}`} isos={reading.isos} />
+            <Readout
+              key={`r${scan?.value}`}
+              reading={reading}
+              decoder={decoder}
+            />
+          </>
+        ) : (
+          <p className={styles.hint}>{t('scanner.hint')}</p>
+        )}
       </CameraView>
     );
   }
 
   return (
     <main className={styles.app}>
-      <h1 className={styles.title}>{t('app.name')}</h1>
+      <header className={styles.head}>
+        <h1 className={styles.wordmark}>
+          <img className={styles.brand} src="/favicon.svg" alt="" />
+          {t('app.name')}
+        </h1>
+        <p className={styles.build}>v{__APP_VERSION__}</p>
+      </header>
 
       <p className={styles.status} role="status">
         {camera.status === 'starting'
@@ -45,8 +70,6 @@ export default function App() {
           missingRequired={missingRequired}
         />
       )}
-
-      <p className={styles.version}>v{__APP_VERSION__}</p>
     </main>
   );
 }
