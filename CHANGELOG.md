@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.3.3 - 2026-08-23 — HTTPS for the dev server
+
+### Added
+
+- The dev server and `pnpm preview` serve over HTTPS when `certs/cert.pem` and
+  `certs/key.pem` are present, and over plain HTTP when they are not. `getUserMedia`
+  refuses to run on a LAN address over HTTP, so a phone cannot reach the scanner without
+  a certificate, and making it conditional keeps the repo working for anyone who has not
+  generated one. `certs/` is ignored by git so a private key cannot be pushed by
+  accident.
+- `preview` gets the same treatment deliberately: the production build is worth testing
+  on a phone separately, because the wasm decoder only loads as a real chunk there.
+
+### Changed
+
+- The phone-testing section of the README lists three routes, cheapest first. Chrome port
+  forwarding over USB makes an Android phone see the dev server as `localhost`, which is
+  a trustworthy origin by definition and needs no certificate at all. A tunnel needs
+  nothing installed on the phone and works on iOS. mkcert is for repeated LAN testing and
+  costs one certificate authority installed on the device.
+
 ## 0.3.2 - 2026-08-23 — It reads barcodes
 
 ### Added

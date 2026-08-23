@@ -62,19 +62,42 @@ pnpm dev
 
 ### Testing on a real phone
 
-`getUserMedia` requires a secure context. `localhost` counts; your machine's LAN IP does not, so
-`pnpm dev:host` alone is not enough — the camera will refuse to start over plain HTTP.
+`getUserMedia` needs a secure context. `localhost` counts; your machine's LAN IP does not, so
+`pnpm dev:host` on its own is not enough — the camera refuses to start and the app says so.
+Three ways around it, cheapest first.
 
-The least painful route is a tunnel with a real certificate:
+**Android over USB — no certificate at all.** Chrome's port forwarding makes the phone see the
+dev server as `localhost`, which is trustworthy by definition. Turn on USB debugging, plug the
+phone in, open `chrome://inspect/#devices` on the desktop, tick *Discover USB devices*, then add
+a *Port forwarding* rule from `5173` to `localhost:5173`. Open `http://localhost:5173` on the
+phone. Full speed, hot reload intact, nothing leaves the machine.
+
+**Any phone, nothing to install on it — a tunnel.**
 
 ```bash
 pnpm dev
 cloudflared tunnel --url http://localhost:5173
 ```
 
-Open the printed `https://…trycloudflare.com` URL on the phone. `ngrok http 5173` works the same
-way. A self-signed certificate on `pnpm dev:host` also works but forces you through a browser
-warning on every device.
+Open the printed `https://…trycloudflare.com` address. `ngrok http 5173` is equivalent. The
+address changes every run and the traffic goes through someone else's network.
+
+**Repeated testing over the LAN — a locally trusted certificate.**
+
+```bash
+mkcert -install
+mkcert -key-file certs/key.pem -cert-file certs/cert.pem 192.168.x.x localhost
+pnpm dev:host
+```
+
+The dev server and `pnpm preview` switch to HTTPS on their own whenever `certs/cert.pem` and
+`certs/key.pem` exist, and fall back to HTTP when they do not, so nothing breaks for anyone who
+has not generated a pair. `certs/` is ignored by git.
+
+The phone still has to trust the authority that signed it: `mkcert -CAROOT` prints the folder
+holding `rootCA.pem`, which you install on the device — on iOS that means installing the profile
+and then enabling it separately under *Certificate Trust Settings*. The certificate is tied to
+the IP address you named, so a new DHCP lease means generating it again.
 
 **In-app browsers block the camera.** Facebook, Instagram, LinkedIn and TikTok webviews will not
 grant camera access. If you send yourself a test link through any of them, open it in Safari or
@@ -87,7 +110,7 @@ Chrome first.
 | Script | What it does |
 |---|---|
 | `pnpm dev` | Vite dev server on `localhost:5173` |
-| `pnpm dev:host` | Same, exposed on the LAN (still HTTP — see the tunnel note above) |
+| `pnpm dev:host` | Same, exposed on the LAN. HTTPS if `certs/` holds a key pair, HTTP if not |
 | `pnpm build` | `tsc -b` then `vite build` into `dist/` |
 | `pnpm preview` | Serve the production build locally |
 | `pnpm typecheck` | Full type check, no emit |
