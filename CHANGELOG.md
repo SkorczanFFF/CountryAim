@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.3.1 - 2026-08-23 — Decoder behind one interface
+
+### Added
+
+- `scanner/detector.ts`: the platform `BarcodeDetector` where it works, and the
+  WebAssembly ponyfill everywhere else, behind one `detect`. The binary is imported
+  dynamically, so Android Chrome never downloads it and Safari and Firefox only do once.
+  The chosen backend is reported, because it is the first thing worth knowing when a
+  device refuses to scan.
+- `barcode-detector` and `zxing-wasm` as dependencies. `zxing-wasm` is direct rather than
+  transitive because pnpm does not hoist, and it is pinned to exactly the version the
+  ponyfill expects, which checks the binary against a known SHA-256.
+
+### Notes
+
+- The wasm binary is self-hosted. Left alone the library fetches it from
+  `fastly.jsdelivr.net`, which would report every scan to a third party against what the
+  README promises, leave the scanner dead offline, and break it during any CDN outage.
+  `setZXingModuleOverrides` points it at a bundled asset instead.
+- That binary is 1.07 MB, not the 300 KB the plan assumed. Corrected on record.
+- A platform decoder is trusted only if it lists every format we need. Chrome ships the
+  constructor on platforms where the format list comes back empty and nothing decodes,
+  so presence alone proves nothing.
+- Backends disagree on UPC-E: some return the eight compressed digits, others the twelve
+  they expand to. Rather than pinning one backend by test, the adapter relabels twelve
+  digits as the UPC-A they already are. Two implementations are allowed to differ, and
+  hiding that is what an adapter is for; the parser stays strict.
+
 ## 0.3.0 - 2026-08-23 — The camera turns on
 
 ### Added
