@@ -1,5 +1,63 @@
 # Changelog
 
+## 0.2.1 - 2026-08-23 — GS1 prefix table, and a plan reordered around it
+
+### Added
+
+- `lib/gs1Prefixes.ts`: the GS1 prefix ranges, as a discriminated union of `country`,
+  `region` and `special` entries. `region` exists because six ranges cover more than one
+  country — France and Monaco, Belgium and Luxembourg, Denmark with the Faroes and
+  Greenland, Switzerland and Liechtenstein, Italy with San Marino and the Vatican, Spain
+  and Andorra — so no single flag or name fits them. Anything the table does not cover is
+  unassigned by omission, rather than through a hand-maintained list of gaps.
+- Six structural tests over that table: sorted, non-overlapping, in-range bounds, ISO codes
+  well formed, regions holding more than one country. A hand-transcribed table has no other
+  guard, because a wrong code is internally consistent and simply shows the wrong country.
+
+### Changed
+
+- The commit plan now reaches a working app at commit 12 instead of commit 24. The camera
+  sat at commit 15, behind the whole UI shell, which put the least certain part of the
+  project last; risk is retired in order of risk, not in order of layers. After the domain
+  logic the next four commits are camera, detector, scan loop and result — a vertical slice
+  — and routing, theme, i18n, settings and Open Food Facts are then built on something that
+  works. The cost is that those screens predate i18n, so their copy lands in one keyed
+  module from the first commit and the provider later consumes it instead of rewriting them.
+- Milestones renamed to match: 0.3.x is the working slice, 0.4.x hardens the scanner, 0.5.x
+  is the shell, 0.6.x polishes the result. 1.0.0 becomes the single deliberate exception to
+  the automatic bump, declared once the whole loop has been tested on a real phone.
+
+### Fixed
+
+- The test barcode `2012345678909` carries an invalid check digit; it is `2012345678903`.
+  `parseGtin` would have rejected it before any prefix lookup, so the case never tested the
+  restricted-distribution range it was there for. Test codes for EAN-8 and UPC-E were
+  missing entirely despite both being supported, and both traps live there.
+- Nine documentation inconsistencies, none of which would have failed a test: the accent
+  colour on record did not match the one in `tokens.css`; the prefix-table sketch predated
+  the `region` kind and still listed `unassigned` as a special key; the dev dependency
+  table named `@vitejs/plugin-basic-ssl`, contradicting the tunnel approach documented in
+  the README, and omitted the test tooling actually installed; the i18n section still
+  claimed Belgium and Luxembourg need manual handling, which `Intl.ListFormat` removed; the
+  favicon was recorded as 24 units tall against an actual 18; and the architecture tree
+  omitted `hooks/` while claiming `tokens.css` contains `@property`.
+- `@property` is declared in the README and probed by the capability report but used
+  nowhere. It now lands with the scan loop, animating the scan indicator, which is the
+  place it was always meant for.
+
+### Notes
+
+- Ranges are stored in a four-digit space rather than three, because GS1 publishes
+  allocations finer than three digits: the GTIN-8 pool splits 962 between GS1 UK
+  (9600-9624), GS1 Poland (9625-9626) and the Global Office (9627-9699), and 9790 carves
+  ISMN out of the middle of the ISBN range. Three digits would have mis-attributed both
+  silently.
+- Checked against Wikipedia rather than gs1.org, which answers 403 to automated requests.
+  The pass found fifteen corrections, four of which would have named the wrong country:
+  Kosovo is 381 and not 390, 605 is Uganda and not Tunisia, 606 is Angola and not Uganda,
+  and 623 reads as reserved rather than Brunei. 623 is the one entry worth confirming by
+  hand against the official list.
+
 ## 0.2.0 - 2026-08-23 — GS1 domain logic begins
 
 ### Added
