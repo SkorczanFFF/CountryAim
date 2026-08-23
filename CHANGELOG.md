@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.2.2 - 2026-08-23 — Prefix lookup
+
+### Added
+
+- `lib/lookup.ts`: resolves the digits a GTIN carries its GS1 prefix in to the range that
+  issued them. An unassigned prefix comes back as `undefined`, which is a normal answer
+  rather than an error: GS1 hands out new prefixes over time, and misread or non-standard
+  codes reach here too. Tests run whole printed barcodes through `parseGtin` and into the
+  lookup, covering every supported format, the multi-country case, two special ranges, and
+  the boundaries around 590, 9790 and the GTIN-8 split.
+
+### Notes
+
+- The lookup scans linearly rather than by bisection. There are about 140 non-overlapping
+  ranges and it runs once per successful scan rather than per frame, so a binary search
+  would optimise nothing measurable while adding boundary cases to get wrong.
+- It returns the matched range itself, bounds included, instead of a narrowed result type.
+  Nothing is lost, no second union has to be kept in step with the first, and the bounds
+  are useful when working out why a code resolved the way it did.
+
 ## 0.2.1 - 2026-08-23 — GS1 prefix table, and a plan reordered around it
 
 ### Added
