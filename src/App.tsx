@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { CameraView } from '~/components/CameraView/CameraView';
 import { CapabilityReport } from '~/components/CapabilityReport/CapabilityReport';
+import { Flags } from '~/components/Flags/Flags';
 import { Readout } from '~/components/Readout/Readout';
 import { ScannerOverlay } from '~/components/ScannerOverlay/ScannerOverlay';
 import { useCapabilities } from '~/hooks/useCapabilities';
+import { describeReading } from '~/i18n/reading';
 import { t } from '~/i18n/t';
 import type { Scan } from '~/scanner/detector';
 import { useCamera } from '~/scanner/useCamera';
@@ -17,6 +19,7 @@ export default function App() {
   const [scan, setScan] = useState<Scan | null>(null);
 
   const decoder = useScanLoop(video, setScan);
+  const reading = scan && describeReading(scan);
 
   if (camera.status === 'ready') {
     return (
@@ -26,8 +29,16 @@ export default function App() {
           <img className={styles.brand} src="/favicon.svg" alt="" />
           {t('app.name')}
         </p>
-        {scan ? (
-          <Readout scan={scan} decoder={decoder} />
+        {reading ? (
+          // Keyed on the code so a new reading replays both entrances.
+          <>
+            <Flags key={`f${scan?.value}`} isos={reading.isos} />
+            <Readout
+              key={`r${scan?.value}`}
+              reading={reading}
+              decoder={decoder}
+            />
+          </>
         ) : (
           <p className={styles.hint}>{t('scanner.hint')}</p>
         )}

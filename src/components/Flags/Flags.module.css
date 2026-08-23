@@ -1,0 +1,43 @@
+@layer components {
+  .flags {
+    position: absolute;
+    inset-inline: 0;
+    inset-block-start: 0;
+    /* Exactly the space above the band, so nothing needs nudging by hand when the
+       band changes. The top padding clears the wordmark, and what is left is the
+       gap between it and the scanner, which the flags sit in the middle of. */
+    block-size: var(--band-top);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    padding-block: calc(
+        max(var(--space-5), env(safe-area-inset-top)) +
+        var(--space-6)
+      )
+      var(--space-5);
+    padding-inline: var(--space-5);
+  }
+
+  .flag {
+    block-size: clamp(40px, 12vw, 60px);
+    inline-size: auto;
+    border-radius: var(--radius);
+    /* A white flag on a pale product would otherwise have no edge at all. */
+    outline: 1px solid color-mix(in oklab, var(--chrome) 35%, transparent);
+    outline-offset: -1px;
+    animation: land 300ms cubic-bezier(0.2, 0, 0, 1) both;
+  }
+
+  @keyframes land {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}

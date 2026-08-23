@@ -17,6 +17,9 @@ importers:
       barcode-detector:
         specifier: 3.2.2
         version: 3.2.2(@types/emscripten@1.41.5)
+      country-flag-icons:
+        specifier: 1.6.20
+        version: 1.6.20
       react:
         specifier: 19.2.8
         version: 19.2.8
@@ -393,6 +396,9 @@ packages:
 
   convert-source-map@2.0.0:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
+
+  country-flag-icons@1.6.20:
+    resolution: {integrity: sha512-py8JiEKzjhYw6HPJ0L7SxLgCYim36UPRTZX43/kqGueUCZLSvnrqAiwW8HtQibur7mdkFQUkjOgdK+o/9FBtaw==}
 
   css.escape@1.5.1:
     resolution: {integrity: sha512-YUifsXXuknHlUsmlgyY0PKzgPOr7/FjCePfHNt0jxm83wHZi44VDMQ7/fGNkjY3/jV1MC+1CmZbaHzugyeRtpg==}
@@ -1012,6 +1018,8 @@ snapshots:
   chai@6.2.2: {}
 
   convert-source-map@2.0.0: {}
+
+  country-flag-icons@1.6.20: {}
 
   css.escape@1.5.1: {}
 

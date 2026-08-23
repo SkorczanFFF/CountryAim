@@ -40,6 +40,12 @@ export default defineConfig({
       },
     ],
   },
+  build: {
+    // 265 flags would inline to roughly a quarter of a megabyte of data URIs,
+    // all so one of them can be shown. Everything else keeps Vite's own rule.
+    assetsInlineLimit: (filePath: string) =>
+      filePath.includes('country-flag-icons') ? false : undefined,
+  },
   css: {
     transformer: 'lightningcss',
     lightningcss: { targets },

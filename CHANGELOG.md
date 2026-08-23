@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.3.6 - 2026-08-24 — Flags above the band
+
+### Added
+
+- The flag of whatever issued the code, centred in the gap between the wordmark and the scan
+  band. A range covering
+  several countries shows all of them: 840-849 is Spain and Andorra, 800-839 is Italy, San
+  Marino and the Vatican. This settles the question left open when the prefix table was
+  written, which the data could not answer on its own.
+- `country-flag-icons`, self-hosted. Flags are resolved at build time into a table of
+  URLs, so the browser fetches only the one it needs and nothing goes to a third party.
+- `i18n/reading.ts`: one place where a scan becomes something to put on screen. The flags
+  and the readout now read from the same result instead of each working it out.
+
+### Notes
+
+- Measured before choosing: `flag-icons` ships 2.00 MB of flags against 178 kB here,
+  because it draws the detailed coats of arms. Serbia is 181 kB there and 861 bytes here,
+  Spain 80 kB against 599 bytes. At thirty pixels tall the detail is invisible, so the
+  lighter set costs nothing to look at.
+- Flags are forced out as files rather than inlined. Left to the default, all 259 would
+  have become data URIs in the bundle, about a quarter of a megabyte to show one of them.
+  The URL table alone adds 4.7 kB gzipped, which is the price of not knowing in advance
+  which flag is needed.
+- Ranges that are not countries — ISBN, coupons, in-store codes — show no flag. There is
+  no symbol for them and inventing one would say something untrue.
+
 ## 0.3.5 - 2026-08-24 — A target behind the strokes
 
 ### Changed
