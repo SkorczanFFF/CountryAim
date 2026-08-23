@@ -1,5 +1,43 @@
 # Changelog
 
+## 0.3.0 - 2026-08-23 — The camera turns on
+
+### Added
+
+- `scanner/useCamera.ts`: opens the rear camera, hands back the stream, and stops every
+  track on the way out. A stream that resolves after the effect was torn down is stopped
+  immediately instead of being kept — without that branch StrictMode leaks the first
+  stream on every mount in development and the camera light never goes off. It has its
+  own test.
+- `components/CameraView`: the full-screen preview. `playsInline` keeps iOS from taking
+  the video fullscreen, `position: fixed; inset: 0` sidesteps every mobile
+  viewport-height quirk at once, and `srcObject` is followed by an explicit `play()`
+  because Safari ignores autoplay often enough to leave a black rectangle.
+- Seven distinct failure reasons — insecure origin, unsupported browser, denied, no
+  camera, camera busy, constraints unmet, unknown — decided in the hook rather than in
+  the error screens that come later, so those screens will not have to change its
+  return type. The reason is read off the error by shape rather than by `instanceof`,
+  since `OverconstrainedError` is not a DOMException everywhere.
+- `i18n/messages.ts` and `t()`. Polish only for now, but the signature is the one the
+  locale provider will keep, so it replaces the lookup without touching a call site.
+  Error copy is addressed as `camera.error.${reason}`, which makes the compiler reject a
+  new failure reason that has no message.
+
+### Changed
+
+- The capability probe is no longer the main screen; it is what the error screen shows.
+  When the camera will not start, the next question is always what the device actually
+  has, so the probe is most useful exactly there.
+
+### Notes
+
+- `facingMode` is a preference, not `{ exact: "environment" }`. Exact throws on any
+  device without a rear camera, which would make the app untestable on a laptop, and a
+  phone picks the rear camera either way.
+- No resolution is requested yet. The default may be too coarse to read a barcode at
+  arm's length, but asking for more costs battery and heat, and there is nothing to tune
+  against until the scan loop can measure a hit rate.
+
 ## 0.2.3 - 2026-08-23 — Localised country names
 
 ### Added

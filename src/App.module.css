@@ -10,12 +10,15 @@
     font-size: clamp(1.75rem, 8vw, 2.5rem);
   }
 
-  .lede {
+  .status {
     color: var(--fg-muted);
+    font-size: 1.125rem;
+    text-wrap: pretty;
   }
 
   .version {
-    font-family: var(--font-mono);
     color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
   }
 }

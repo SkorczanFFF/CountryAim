@@ -1,0 +1,15 @@
+@layer components {
+  .stage {
+    position: fixed;
+    inset: 0;
+    /* Not a themed surface: a camera preview sits on black in either theme, and
+       fixed inset beats every mobile viewport-height quirk at once. */
+    background: #000;
+  }
+
+  .video {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+}
