@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.2.3 - 2026-08-23 — Localised country names
+
+### Added
+
+- `lib/countryName.ts`: country names straight from the platform CLDR data, and
+  `Intl.ListFormat` to join the ranges that cover several countries — "Belgia
+  i Luksemburg", "Italy, San Marino, and Vatican City". Neither costs a translated
+  string, which is what keeps a new language at about ten interface strings rather than a
+  hundred and thirty country names.
+- `lib/locale.ts` holding `type Locale`, so the i18n provider and the country names will
+  share one definition instead of each declaring their own.
+
+### Notes
+
+- The planned override for XK turned out to be unnecessary: CLDR carries Kosovo even
+  though it is not an ISO 3166-1 code. Checked rather than assumed, and a test now holds
+  that ground in case some browser disagrees.
+- Names use `style: "long"`. `short` would improve "SRA Hongkong (Chiny)" to
+  "Hongkong", but it also cuts "Wielka Brytania" to "Wlk. Bryt." and "Stany
+  Zjednoczone" to "USA". The US and UK prefixes are common and Hong Kong is not, so the
+  trade goes the wrong way. Worth revisiting once the result card exists to look at.
+- A malformed region code throws a RangeError instead of falling back. That is documented
+  rather than guarded: every code reaching the function comes from the prefix table, whose
+  shape is already asserted by its own tests.
+
 ## 0.2.2 - 2026-08-23 — Prefix lookup
 
 ### Added
