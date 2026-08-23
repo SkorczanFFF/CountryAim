@@ -147,6 +147,10 @@ Note that the Popover API needs Safari 17, above our floor, so dialogs use `<dia
   state.
 - **[`CHANGELOG.md`](./CHANGELOG.md)** follows Keep a Changelog and is updated in the same commit
   as the change it describes.
+- **A version per commit.** The minor tracks the milestone: `0.1.x` toolchain, `0.2.x`
+  domain logic, `1.0.0` the finished scan-to-result loop. The first commit of a milestone
+  bumps the minor, every other commit bumps the patch. Every commit on `main` deploys, so
+  the version the app prints identifies the exact build running on your phone.
 - **Essential comments only.** Comments explain *why*, record a browser quirk, or warn about a
   trap. They never restate the code.
 - **Formatting lives in `.editorconfig`**, which Biome reads via `formatter.useEditorconfig`.
