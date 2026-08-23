@@ -1,9 +1,14 @@
-import { useEffect, useRef } from 'react';
+import { type ReactNode, useEffect, useRef } from 'react';
 import styles from './CameraView.module.css';
 
-type CameraViewProps = { stream: MediaStream };
+type CameraViewProps = {
+  stream: MediaStream;
+  /** Handed the element so the scan loop can read frames from it. */
+  onVideo: (video: HTMLVideoElement | null) => void;
+  children?: ReactNode;
+};
 
-export function CameraView({ stream }: CameraViewProps) {
+export function CameraView({ stream, onVideo, children }: CameraViewProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -14,11 +19,13 @@ export function CameraView({ stream }: CameraViewProps) {
     // Safari on iOS ignores autoplay often enough that the preview stays black
     // without this. The rejection when autoplay already started is not a fault.
     video.play().catch(() => {});
+    onVideo(video);
 
     return () => {
       video.srcObject = null;
+      onVideo(null);
     };
-  }, [stream]);
+  }, [stream, onVideo]);
 
   return (
     <div className={styles.stage}>
@@ -30,6 +37,7 @@ export function CameraView({ stream }: CameraViewProps) {
         muted
         autoPlay
       />
+      {children}
     </div>
   );
 }

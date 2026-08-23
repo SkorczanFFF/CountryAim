@@ -8,11 +8,17 @@ describe('CameraView', () => {
     const stream = new MediaStream();
     vi.spyOn(HTMLMediaElement.prototype, 'play').mockResolvedValue(undefined);
 
-    const { container, unmount } = render(<CameraView stream={stream} />);
+    const onVideo = vi.fn();
+    const { container, unmount } = render(
+      <CameraView stream={stream} onVideo={onVideo} />,
+    );
     const video = container.querySelector('video');
 
     expect(video?.srcObject).toBe(stream);
+    expect(onVideo).toHaveBeenCalledWith(video);
+
     unmount();
     expect(video?.srcObject).toBeNull();
+    expect(onVideo).toHaveBeenLastCalledWith(null);
   });
 });

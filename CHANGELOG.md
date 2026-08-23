@@ -1,5 +1,37 @@
 # Changelog
 
+## 0.3.2 - 2026-08-23 — It reads barcodes
+
+### Added
+
+- `scanner/useScanLoop.ts`: decodes about twelve frames a second off the live preview.
+  `requestVideoFrameCallback` where it exists and animation frames where it does not,
+  since Firefox is inside our browser floor and has no rVFC. A decode in flight blocks
+  the next attempt, so a slow WebAssembly frame cannot queue up behind itself.
+- `scanner/roi.ts`: the band that is read, and the mapping from what the viewer sees back
+  to camera pixels.
+- `components/ScannerOverlay`: the band drawn on screen, dimmed outside, with a sweeping
+  line. It takes its size from the same constant the crop uses, so the frame cannot drift
+  away from the region actually being read.
+- The scanned digits are shown raw for now. The frozen frame and the country follow next.
+
+### Notes
+
+- The crop is computed in displayed space, not source space. The preview uses
+  `object-fit: cover`, so a 1280x720 camera in a 360x640 phone shows only 405 of the 1280
+  source columns. Cropping 86% of the source would read 1101 columns — a barcode could be
+  decoded well outside the frame the mask is drawing. A test pins the crop inside the
+  visible region.
+- The build confirms the split: the 1093 kB wasm binary and the 44 kB ponyfill are
+  separate lazy chunks, so a device with a working platform decoder downloads neither.
+- `@property` was scheduled to land here for the sweep animation and did not. A plain
+  offset moves the line correctly, and reaching for an animated custom property would
+  have been done only to justify a line in the README. If nothing genuinely needs it by
+  the documentation commit, that line goes instead.
+- Turning the camera off when the tab is hidden is still outstanding. Animation frames
+  and rVFC both stop on their own, so no decoding happens, but the camera itself keeps
+  running and draining. That belongs with the camera lifecycle, not the loop.
+
 ## 0.3.1 - 2026-08-23 — Decoder behind one interface
 
 ### Added

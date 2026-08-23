@@ -1,15 +1,31 @@
+import { useState } from 'react';
 import { CameraView } from '~/components/CameraView/CameraView';
 import { CapabilityReport } from '~/components/CapabilityReport/CapabilityReport';
+import { ScannerOverlay } from '~/components/ScannerOverlay/ScannerOverlay';
 import { useCapabilities } from '~/hooks/useCapabilities';
 import { t } from '~/i18n/t';
+import type { Scan } from '~/scanner/detector';
 import { useCamera } from '~/scanner/useCamera';
+import { useScanLoop } from '~/scanner/useScanLoop';
 import styles from './App.module.css';
 
 export default function App() {
   const camera = useCamera();
   const { capabilities, missingRequired } = useCapabilities();
+  const [video, setVideo] = useState<HTMLVideoElement | null>(null);
+  const [scan, setScan] = useState<Scan | null>(null);
 
-  if (camera.status === 'ready') return <CameraView stream={camera.stream} />;
+  useScanLoop(video, setScan);
+
+  if (camera.status === 'ready') {
+    return (
+      <CameraView stream={camera.stream} onVideo={setVideo}>
+        <ScannerOverlay />
+        {/* Raw reading for now; the frozen frame and the country arrive next. */}
+        {scan && <p className={styles.reading}>{scan.value}</p>}
+      </CameraView>
+    );
+  }
 
   return (
     <main className={styles.app}>
