@@ -1,0 +1,101 @@
+@layer components {
+  .readout {
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 0;
+    display: grid;
+    gap: var(--space-3);
+    justify-items: start;
+    padding-block: var(--space-5)
+      max(var(--space-5), env(safe-area-inset-bottom));
+    padding-inline: max(var(--space-5), env(safe-area-inset-left))
+      max(var(--space-5), env(safe-area-inset-right));
+    background: color-mix(in oklab, black 70%, transparent);
+    backdrop-filter: blur(14px) saturate(0.8);
+    -webkit-backdrop-filter: blur(14px) saturate(0.8);
+    border-block-start: 1px solid
+      color-mix(in oklab, var(--chrome) 18%, transparent);
+  }
+
+  .issuer {
+    color: var(--chrome);
+    font-size: clamp(1.5rem, 7vw, 2.25rem);
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: 0.01em;
+    text-wrap: balance;
+    /* Reads a beat after the digits: the number arrives, then the answer. */
+    animation: resolve 260ms 80ms cubic-bezier(0.2, 0, 0, 1) both;
+  }
+
+  .issuer::before {
+    content: "";
+    display: block;
+    inline-size: var(--space-5);
+    block-size: 2px;
+    margin-block-end: var(--space-3);
+    background: var(--laser);
+  }
+
+  .code {
+    font-family: var(--font-mono);
+    font-size: clamp(1rem, 4.5vw, 1.25rem);
+    font-variant-numeric: tabular-nums;
+    animation: resolve 220ms cubic-bezier(0.2, 0, 0, 1) both;
+  }
+
+  .prefix {
+    color: var(--laser);
+    text-decoration: underline 1px var(--laser);
+    text-underline-offset: 0.35em;
+  }
+
+  .rest {
+    color: color-mix(in oklab, var(--chrome) 60%, transparent);
+  }
+
+  .status {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-4);
+    margin: 0;
+    color: color-mix(in oklab, var(--chrome) 40%, transparent);
+    font-size: 0.625rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+  }
+
+  .reading {
+    display: flex;
+    gap: var(--space-2);
+    padding-inline-start: var(--space-3);
+    border-inline-start: 1px solid
+      color-mix(in oklab, var(--chrome) 20%, transparent);
+  }
+
+  .status dd {
+    margin: 0;
+    color: color-mix(in oklab, var(--chrome) 80%, transparent);
+    font-family: var(--font-mono);
+    letter-spacing: 0.08em;
+  }
+
+  .status dd[data-failed] {
+    color: var(--laser);
+  }
+
+  @keyframes resolve {
+    from {
+      font-weight: 300;
+      letter-spacing: 0.28em;
+      opacity: 0;
+    }
+
+    to {
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      opacity: 1;
+    }
+  }
+}

@@ -11,37 +11,117 @@
     position: relative;
     inline-size: var(--roi-inline);
     block-size: var(--roi-block);
-    border: 2px solid var(--accent);
-    border-radius: var(--radius-lg);
-    /* A single spread shadow dims everything outside the band, which beats four
-       positioned elements that would have to be kept in step with it. */
-    box-shadow: 0 0 0 100vmax color-mix(in oklab, black 55%, transparent);
+    /* One spread shadow dims everything outside the band. Two clipped layers
+       cannot make an outline out of this — both fill the whole outside. */
+    box-shadow: 0 0 0 100vmax color-mix(in oklab, black 62%, transparent);
+  }
+
+  .slot {
+    position: absolute;
+    inset: 0;
     overflow: hidden;
   }
 
-  .line {
+  /* Outside the band, with a gap: they mark the corners without taking a pixel
+     of the area being read. */
+  .corner {
+    position: absolute;
+    inline-size: 28px;
+    block-size: 28px;
+    border: 3px solid var(--aim);
+
+    --escape: -3px;
+    animation: pulse 2.4s ease-in-out infinite;
+
+    &[data-at="tl"] {
+      inset-block-start: var(--escape);
+      inset-inline-start: var(--escape);
+      border-inline-end: 0;
+      border-block-end: 0;
+    }
+
+    &[data-at="tr"] {
+      inset-block-start: var(--escape);
+      inset-inline-end: var(--escape);
+      border-inline-start: 0;
+      border-block-end: 0;
+    }
+
+    &[data-at="bl"] {
+      inset-block-end: var(--escape);
+      inset-inline-start: var(--escape);
+      border-inline-end: 0;
+      border-block-start: 0;
+    }
+
+    &[data-at="br"] {
+      inset-block-end: var(--escape);
+      inset-inline-end: var(--escape);
+      border-inline-start: 0;
+      border-block-start: 0;
+    }
+  }
+
+  /* A very thin white core with a wide bloom. A saturated red never reads as hot,
+     and a soft wide bar reads as a gradient rather than as light. */
+  .laser {
     position: absolute;
     inset-inline: 0;
-    block-size: 2px;
+    block-size: 5px;
+    margin-block-start: -2.5px;
     background: linear-gradient(
-      to right,
+      to bottom,
       transparent,
-      var(--accent),
+      color-mix(in oklab, var(--laser) 60%, transparent) 30%,
+      var(--laser) 42%,
+      white 50%,
+      var(--laser) 58%,
+      color-mix(in oklab, var(--laser) 60%, transparent) 70%,
       transparent
     );
-    /* Offset rather than transform: a percentage transform would resolve against
-       the line's own 2px, not the band it has to cross. The element is two
-       pixels tall inside a fixed box, so the layout cost is not worth the trick
-       needed to keep transforms honest here. */
-    animation: sweep 2.4s ease-in-out infinite alternate;
+    box-shadow:
+      0 0 6px color-mix(in oklab, var(--laser) 90%, transparent),
+      0 0 22px color-mix(in oklab, var(--laser) 55%, transparent),
+      0 0 60px color-mix(in oklab, var(--laser) 30%, transparent);
+    animation: sweep 2.4s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
   }
 
   @keyframes sweep {
     from {
       inset-block-start: 0;
+      opacity: 0.75;
     }
+
+    50% {
+      opacity: 1;
+    }
+
     to {
-      inset-block-start: calc(100% - 2px);
+      inset-block-start: 100%;
+      opacity: 0.75;
+    }
+  }
+
+  /* Same 2.4s as the sweep, so the frame breathes on the scan's rhythm. */
+  @keyframes pulse {
+    0%,
+    100% {
+      opacity: 0.5;
+    }
+
+    50% {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .laser {
+      inset-block-start: 50%;
+      opacity: 1;
+    }
+
+    .corner {
+      opacity: 1;
     }
   }
 }

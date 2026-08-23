@@ -1,36 +1,74 @@
 @layer components {
   .app {
     display: grid;
-    gap: var(--space-5);
-    max-inline-size: 40rem;
+    align-content: start;
+    gap: var(--space-6);
+    max-inline-size: 34rem;
     margin-inline: auto;
   }
 
-  .title {
-    font-size: clamp(1.75rem, 8vw, 2.5rem);
+  .head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding-block-end: var(--space-3);
+    border-block-end: 1px solid var(--border);
+  }
+
+  /* The instrument's nameplate, not a title: small and widely tracked, so the
+     reading is always the largest thing on screen. */
+  .brand {
+    inline-size: 20px;
+    block-size: 20px;
+  }
+
+  .wordmark {
+    color: var(--aim-ink);
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.42em;
+  }
+
+  .build {
+    color: var(--fg-muted);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+  }
+
+  /* Sits on the camera image, so it carries its own weight rather than a panel. */
+  .mark {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    position: absolute;
+    inset-block-start: max(var(--space-5), env(safe-area-inset-top));
+    inset-inline-start: max(var(--space-5), env(safe-area-inset-left));
+    color: var(--aim);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.42em;
+  }
+
+  .hint {
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: max(var(--space-6), env(safe-area-inset-bottom));
+    color: color-mix(in oklab, var(--chrome) 60%, transparent);
+    font-size: 0.8125rem;
+    letter-spacing: 0.04em;
+    text-align: center;
   }
 
   .status {
-    color: var(--fg-muted);
-    font-size: 1.125rem;
-    text-wrap: pretty;
-  }
-
-  .version {
-    color: var(--accent);
-    font-family: var(--font-mono);
-    font-size: 0.875rem;
-  }
-}
-
-@layer components {
-  .reading {
-    position: absolute;
-    inset-block-end: max(var(--space-6), env(safe-area-inset-bottom));
-    inset-inline: 0;
-    color: var(--accent);
-    font-family: var(--font-mono);
-    font-size: 1.5rem;
-    text-align: center;
+    font-size: clamp(1.25rem, 5vw, 1.625rem);
+    line-height: 1.25;
+    text-wrap: balance;
   }
 }

@@ -1,4 +1,8 @@
+import type { Locale } from '~/lib/locale';
 import { type MessageKey, pl } from './messages';
+
+/** One place to change when the locale provider lands in M4. */
+export const LOCALE: Locale = 'pl';
 
 /**
  * Polish only for now. M4 swaps the body for a locale-aware lookup; the

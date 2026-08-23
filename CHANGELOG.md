@@ -1,5 +1,59 @@
 # Changelog
 
+## 0.3.4 - 2026-08-23 — Scanner layout
+
+### Changed
+
+- The interface is built as a measuring instrument. Near-monochrome cool greys, with red
+  reserved for the one thing the tool is doing: reading.
+- Spacing is derived from the barcode module, the narrowest bar in an EAN symbol, which
+  puts the scale at 3, 6, 9, 15, 21 and 42 pixels instead of the usual round eights.
+- The band is marked by four corner brackets in the mark's cyan, three pixels thick,
+  sitting flush against the outside edge. They take no pixel of the area being read,
+  and they breathe on the same 2.4 second cycle as the sweep, so the frame and the laser
+  share one rhythm.
+- The surround is darkened by a single spread shadow, which is what it was two passes ago
+  and what worked. It is not blurred: doing that needs its own element, and the one that
+  was there washed the image out.
+- The capability probe shows state through bar length as well as colour, so it still reads
+  when two similar reds cannot be told apart.
+
+### Added
+
+- The reading names its issuer. A country comes from `Intl.DisplayNames`, a shared member
+  organisation is joined by `Intl.ListFormat`, and the ranges that are not countries at
+  all — ISBN, ISSN, coupons, in-store codes, the GS1 Global Office pool — say what they
+  are instead. This is the first time the domain layer finished in M1 reaches the screen.
+- `components/Readout`: a blurred panel under a hairline, carrying the issuer beneath a
+  short red rule, then the number with its GS1 prefix in laser red and underlined. Names
+  stay in sentence case: caps read well on a short country and turn a long one into a
+  wall. The prefix split follows the printed symbol rather than the canonical form: three
+  digits for EAN-13 and EAN-8, two for UPC-A whose leading zero is implicit, none for
+  UPC-E, which prints its digits compressed.
+- The reading resolves in two beats, digits then answer, from weight 300 and wide tracking
+  to weight 500 and tight, using the variable axes the fonts already ship.
+- A status strip of hairline-separated readings: format, checksum and which decoder
+  answered. The scan loop now surfaces its backend.
+- The mark now sits beside the app name, on both the scanner and the status screen. It is
+  the same `favicon.svg` rather than a copy, so the two cannot drift apart.
+- A wordmark in the top corner and, while nothing has been read, a line under the band
+- The app name is set in the mark'''s cyan beside it, on both screens. The status screen uses a
+  themed variant of that colour, because the flat cyan sits at about 2:1 against a light
+  background, which is not enough for a heading.
+- `--aim`, `--chrome` and `--laser`, none of which flip with the theme, because the camera
+  stage is video on black either way. `--aim` is written as a hex so it matches the mark
+  in `favicon.svg` exactly.
+
+### Notes
+
+- There is no outline around the band. Two layers sharing one clipped shape cannot make
+  an outline out of it — both fill the whole outside, and the upper one washes the image
+  out. Brackets are the shape that works with a single fill.
+- The readout blurs what is behind it. That is the first thing to drop if the scan rate
+  suffers on a slow phone.
+- Reduced motion needs no extra rule for the reading: the global override lands the
+  resolve animation on its final frame, which is the legible one.
+
 ## 0.3.3 - 2026-08-23 — HTTPS for the dev server
 
 ### Added

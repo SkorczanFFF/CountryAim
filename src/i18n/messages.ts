@@ -6,6 +6,7 @@
 export const pl = {
   'app.name': 'CountryAim',
   'camera.starting': 'Uruchamiam kamerę…',
+  'scanner.hint': 'Skieruj aparat na kod kreskowy',
   'camera.error.insecure': 'Kamera działa tylko po HTTPS.',
   'camera.error.unsupported': 'Ta przeglądarka nie udostępnia kamery.',
   'camera.error.denied': 'Brak zgody na dostęp do kamery.',
@@ -13,6 +14,28 @@ export const pl = {
   'camera.error.notReadable': 'Kamera jest zajęta przez inną aplikację.',
   'camera.error.overconstrained': 'Kamera nie spełnia wymagań podglądu.',
   'camera.error.unknown': 'Nie udało się uruchomić kamery.',
+  'readout.invalid': 'Odczyt niepełny',
+  'readout.format': 'Format',
+  'readout.checksum': 'Suma',
+  'readout.checksumOk': 'zgodna',
+  'readout.checksumFailed': 'niezgodna',
+  'readout.decoder': 'Dekoder',
+  'issuer.unassigned': 'Nieznany prefiks',
+  'issuer.restrictedDistribution': 'Kod wewnętrzny sklepu',
+  'issuer.coupon': 'Kupon rabatowy',
+  'issuer.issn': 'Czasopismo (ISSN)',
+  'issuer.isbn': 'Książka (ISBN)',
+  'issuer.ismn': 'Nuty (ISMN)',
+  'issuer.refundReceipt': 'Paragon zwrotu',
+  'issuer.gs1GlobalOffice': 'GS1 Global Office',
+  'issuer.epcGid': 'Identyfikator EPC',
+  'issuer.demo': 'Kod testowy',
+  'issuer.reserved': 'Prefiks zarezerwowany',
+  'probe.heading': 'Możliwości urządzenia',
+  'probe.required': 'wymagane',
+  'probe.optional': 'opcjonalne',
+  'probe.missing':
+    'Brakuje wymaganych funkcji. Skaner nie zadziała na tym urządzeniu.',
 } as const;
 
 export type MessageKey = keyof typeof pl;
