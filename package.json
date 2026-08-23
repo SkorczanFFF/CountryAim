@@ -1,6 +1,6 @@
 {
   "name": "countryaim",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "private": true,
   "type": "module",
   "description": "Scan a barcode with your phone camera and see which country issued it.",

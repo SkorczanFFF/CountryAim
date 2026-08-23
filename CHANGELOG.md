@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.3.5 - 2026-08-24 — A target behind the strokes
+
+### Changed
+
+- The favicon keeps its barcode strokes and swaps the plain ring behind them for a target:
+  two broken arcs and a centre dot, with the arrow entering through the gap the arcs
+  leave. That gap is what the break in the arcs is for. The app is called CountryAim, so
+  the target and the arrow carry the name while the strokes carry the subject.
+
+### Notes
+
+- The arrow is drawn twice, once thick in the plate colour underneath, so it stays legible
+  where it crosses the strokes. Without that it merges into them.
+- Three overlapping systems is a lot for a browser tab. If it muddies at 16 pixels, the
+  cheapest cuts are raising the opacity of the arcs or shortening the arrow so it stops
+  before the strokes rather than crossing them.
+
 ## 0.3.4 - 2026-08-23 — Scanner layout
 
 ### Changed
