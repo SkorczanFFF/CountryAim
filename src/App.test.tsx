@@ -135,6 +135,30 @@ describe('App', () => {
     expect(loop.paused).toBe(true);
   });
 
+  it('says the country is a registration and not an origin', async () => {
+    withCamera();
+    render(<App />);
+    await scan('5901234123457');
+
+    // §2. A country's name under a barcode is read as "made there"; this is the
+    // sentence that stops it, and it is on screen from the moment the name is
+    // rather than behind something the user has to open.
+    expect(
+      screen.getByText('To kraj rejestracji numeru, nie miejsce produkcji.'),
+    ).toBeInTheDocument();
+  });
+
+  it('leaves the disclaimer off a range that names no country', async () => {
+    withCamera();
+    render(<App />);
+    await scan('9780306406157');
+
+    // An ISBN carries no country to be mistaken for an origin, so correcting one
+    // would be noise. The flag stays away for the same reason.
+    expect(screen.getByText('Książka (ISBN)')).toBeInTheDocument();
+    expect(screen.queryByText(/kraj rejestracji/)).toBeNull();
+  });
+
   it('keeps scanning when the check digit does not add up', async () => {
     const { captureStill } = await import('~/scanner/freeze');
     withCamera();

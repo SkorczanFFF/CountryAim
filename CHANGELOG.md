@@ -1,5 +1,41 @@
 # Changelog
 
+## 0.3.9 - 2026-08-30 — A registration, not an origin
+
+### Added
+
+- One sentence under the country's name: *To kraj rejestracji numeru, nie miejsce produkcji.*
+  A GS1 prefix identifies the member organisation a company registered its range of numbers
+  with. It is not where the thing was made — and a country's name under a barcode is read as
+  "made there" unless something on the same screen says otherwise. This is that something. It
+  is on screen from the moment the name is, and never behind a control: a disclosure that has
+  to be opened is one most people never open.
+
+### Notes
+
+- Drawn only where a country is actually named. An ISBN, a coupon or a shop's own code carries
+  no origin to be confused about, and correcting something nobody was about to think is noise.
+  That is the condition the flag is drawn under too, which is not a coincidence — both follow
+  from the reading naming a place.
+- Placed under the name rather than at the foot of the panel, where §6's sketch has it. The
+  misreading is made by that one word, so the correction has to arrive with it and not after
+  the digits and the metadata. Prose size and sentence case for the same reason: the uppercase
+  micro-type of the status row would file this as metadata, which is the one rank it cannot
+  have.
+- The mark beside it is Tabler's own `info-circle`, inlined rather than imported. The library
+  arrives at commit 20 and §4.7 notes it needs `optimizeDeps` tuning to come at all, which one
+  glyph does not justify pulling forward; it is drawn on the same 24 × 24 stroke grid, so
+  dropping in `<IconInfoCircle stroke={2} />` later changes nothing on screen. A circle and not
+  §4.7's alert triangle, which the plan keeps for alerts: this sentence is true of every
+  correct reading, and a warning that never turns off is one people stop seeing. It hangs
+  beside the text rather than flowing in it, so a second line lines up under the sentence and
+  not under the glyph.
+- The plan had this at commit 24, in M5. It moved here because the app started naming countries
+  in 0.3.6 and has been saying more than it knows ever since. That stopped being a question of
+  polish the moment an answer reached the screen.
+- 2 tests, 67 in total: one that the sentence arrives with a country, one that it stays away
+  from an ISBN.
+
 ## 0.3.8 - 2026-08-30 — Which build is this
 
 ### Changed

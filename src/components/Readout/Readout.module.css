@@ -37,6 +37,43 @@
     background: var(--laser);
   }
 
+  /* Sits under the name it corrects rather than at the foot of the panel: the
+     misreading is made by that one word, so the correction has to arrive with it
+     and not after the digits and the metadata. Prose size and sentence case for
+     the same reason — the uppercase micro-type of the status row would file this
+     as metadata, which is the one rank §2 refuses it. One module of separation,
+     against the panel's three, so it reads as part of the name above rather than
+     the next thing down. */
+  .registration {
+    --lh: 1.35;
+    display: flex;
+    gap: var(--space-2);
+    max-inline-size: 40ch;
+    margin-block-start: calc(var(--module) - var(--space-3));
+    color: color-mix(in oklab, var(--chrome) 70%, transparent);
+    font-size: 0.8125rem;
+    line-height: var(--lh);
+    text-wrap: balance;
+  }
+
+  /* Hangs beside the sentence instead of flowing inside it, so a second line
+     lines up under the text and not under the glyph — the shape §6's sketch
+     draws. Sized in em and stroked in `currentColor`, so it reads as part of the
+     sentence rather than a badge pinned next to it. The offset centres a 1em box
+     on the first line box, which is why it is derived from the line height
+     rather than nudged by eye. */
+  .info {
+    flex: none;
+    inline-size: 1em;
+    block-size: 1em;
+    margin-block-start: calc((var(--lh) * 1em - 1em) / 2);
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
   .code {
     font-family: var(--font-mono);
     font-size: clamp(1rem, 4.5vw, 1.25rem);
