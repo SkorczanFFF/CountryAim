@@ -20,6 +20,7 @@ export const pl = {
   'readout.checksumOk': 'zgodna',
   'readout.checksumFailed': 'niezgodna',
   'readout.decoder': 'Dekoder',
+  'result.close': 'Zamknij',
   'issuer.unassigned': 'Nieznany prefiks',
   'issuer.restrictedDistribution': 'Kod wewnętrzny sklepu',
   'issuer.coupon': 'Kupon rabatowy',

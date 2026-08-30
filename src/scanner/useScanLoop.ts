@@ -28,10 +28,16 @@ function scheduler(video: HTMLVideoElement, tick: () => void): Schedule {
 export function useScanLoop(
   video: HTMLVideoElement | null,
   onScan: (scan: Scan) => void,
+  paused = false,
 ): 'native' | 'wasm' | undefined {
   const [backend, setBackend] = useState<'native' | 'wasm'>();
   const onScanRef = useRef(onScan);
   onScanRef.current = onScan;
+  // Read through a ref so pausing never tears the effect down. The stream keeps
+  // running and the detector stays loaded, so coming back from a frozen frame is
+  // immediate instead of a second of black.
+  const pausedRef = useRef(paused);
+  pausedRef.current = paused;
 
   useEffect(() => {
     if (!video) return;
@@ -59,6 +65,7 @@ export function useScanLoop(
       // Skipping while a decode is in flight matters more than the interval:
       // a slow wasm frame would otherwise queue up behind itself.
       if (
+        pausedRef.current ||
         busy ||
         !detector ||
         !context ||

@@ -5,9 +5,10 @@ import styles from './Readout.module.css';
 type ReadoutProps = {
   reading: Reading;
   decoder: 'native' | 'wasm' | undefined;
+  onClose: () => void;
 };
 
-export function Readout({ reading, decoder }: ReadoutProps) {
+export function Readout({ reading, decoder, onClose }: ReadoutProps) {
   return (
     <div className={styles.readout}>
       <p className={styles.issuer}>{reading.issuer}</p>
@@ -39,6 +40,12 @@ export function Readout({ reading, decoder }: ReadoutProps) {
           </div>
         )}
       </dl>
+
+      {/* The only way out of a frozen frame, so it gets the full width of the
+          panel and the bottom of the screen, where a thumb already is. */}
+      <button type="button" className={styles.close} onClick={onClose}>
+        {t('result.close')}
+      </button>
     </div>
   );
 }

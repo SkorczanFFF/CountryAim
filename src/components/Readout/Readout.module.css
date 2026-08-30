@@ -85,6 +85,28 @@
     color: var(--laser);
   }
 
+  .close {
+    justify-self: stretch;
+    margin-block-start: var(--space-2);
+    padding-block: var(--space-3);
+    border: 1px solid color-mix(in oklab, var(--chrome) 30%, transparent);
+    border-radius: var(--radius);
+    background: none;
+    color: var(--chrome);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.28em;
+    /* The tracking is applied to the right of each letter, including the last,
+       so centred text sits one step left of centre without this. */
+    text-indent: 0.28em;
+    cursor: pointer;
+  }
+
+  .close:active {
+    background: color-mix(in oklab, var(--chrome) 14%, transparent);
+  }
+
   @keyframes resolve {
     from {
       font-weight: 300;

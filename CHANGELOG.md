@@ -1,5 +1,51 @@
 # Changelog
 
+## 0.3.7 - 2026-08-30 — The frame stops
+
+### Added
+
+- A reading now stops the screen. The preview gives way to a still taken at the moment of the
+  decode, the flag and the readout come up over it, and a „Zamknij" button underneath them
+  puts the instrument back to work. The vertical slice closes here: camera, decode, answer,
+  back to the camera.
+- `scanner/freeze.ts`. The frame is drawn to a canvas and encoded as a JPEG at quality 0.85
+  rather than left as a paused `<video>`, so what stays on screen is a picture of what was
+  read and cannot drift with the camera.
+- `result.close` in the copy module.
+
+### Changed
+
+- `sourceRect` takes the box to cut as a parameter instead of always cutting the scan band.
+  The still and the decoder read the same `object-fit: cover` mapping this way. The
+  alternative was a second copy of that arithmetic, and it would have been the copy that went
+  wrong the day the preview's aspect ratio changed.
+- `useScanLoop` takes a `paused` flag, read through a ref so pausing never tears the effect
+  down. The stream keeps running and the detector stays loaded, so coming back from a frozen
+  frame is immediate instead of a second of black while `getUserMedia` and a 1.07 MB wasm
+  binary start over.
+- `Readout` gains a required `onClose`. It is the only way out of a frozen frame, so the
+  button takes the full width of the panel at the bottom of the screen, where a thumb
+  already is.
+
+### Notes
+
+- Freezing is gated on the check digit, the first of the two gates in §7.3. One raw decode is
+  not enough to stop the screen on — stopping it on a misread hands the user something to
+  dismiss. The second gate, agreement between consecutive reads, is commit 13; until then a
+  code whose checksum does not add up is simply read again.
+- The still keeps 90% of the preview, against the 86% × 26% the reading was taken from. It
+  is shown with `object-fit: cover` rather than `contain`, because the preview keeps playing
+  underneath and any letterbox would show it moving behind a frozen picture. That crop runs
+  over whatever the still kept, so a box cut further on one axis than the other has the
+  difference encoded into the JPEG and then thrown away: the screen gets the smaller of the
+  two fractions on both axes either way. Hence one number, with the band's own width as its
+  floor — cut inside that and the picture loses the ends of the code it is proof of. A test
+  pins it, because nothing on screen says which of the two crops did the cutting.
+- Every still is a full-size JPEG held by an object URL, on a screen people use dozens of
+  times in a row. `revokeObjectURL` runs on close, so a session does not collect a megabyte
+  per scan.
+- 8 tests added, 64 in total.
+
 ## 0.3.6 - 2026-08-24 — Flags above the band
 
 ### Added

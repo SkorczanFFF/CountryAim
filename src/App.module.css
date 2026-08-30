@@ -41,6 +41,20 @@
     letter-spacing: 0.08em;
   }
 
+  /* Cut in from the preview it replaces, so the freeze reads as a step towards
+     the code rather than a seamless swap: this is what was read, not what the
+     camera happens to be pointing at now. `cover` and not `contain` because the
+     preview is still playing underneath and a letterbox would show it moving
+     behind a frozen picture — which is also why `STILL` keeps one fraction on
+     both axes, since this crop runs over whatever it kept. */
+  .still {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
   /* Sits on the camera image, so it carries its own weight rather than a panel. */
   .mark {
     display: flex;
