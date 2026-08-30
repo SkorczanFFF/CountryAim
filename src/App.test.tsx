@@ -69,6 +69,9 @@ async function scan(value: string, format: Scan['format'] = 'ean_13') {
   // the loop was given picks up the right one.
   await waitFor(() => expect(loop.video).not.toBeNull());
   await act(async () => {
+    // §7.3 wants reads in a row that agree, so one decode is not a reading and
+    // every test expecting a result has to hand over two.
+    loop.onScan?.({ value, format });
     loop.onScan?.({ value, format });
     // The capture is a promise. Letting it settle inside act means the state it
     // sets is committed before the test asserts anything.
@@ -157,6 +160,22 @@ describe('App', () => {
     // would be noise. The flag stays away for the same reason.
     expect(screen.getByText('Książka (ISBN)')).toBeInTheDocument();
     expect(screen.queryByText(/kraj rejestracji/)).toBeNull();
+  });
+
+  it('does not stop the screen on a single read', async () => {
+    const { captureStill } = await import('~/scanner/freeze');
+    withCamera();
+    render(<App />);
+    await waitFor(() => expect(loop.video).not.toBeNull());
+    await act(async () => {
+      loop.onScan?.({ value: '5901234123457', format: 'ean_13' });
+      await new Promise((settle) => setTimeout(settle, 0));
+    });
+
+    // A decode off a creased label can pass mod 10 by luck. §7.3's second gate
+    // is the one that stops it reaching the screen.
+    expect(captureStill).not.toHaveBeenCalled();
+    expect(screen.getByText('Skieruj aparat na kod kreskowy')).toBeVisible();
   });
 
   it('keeps scanning when the check digit does not add up', async () => {

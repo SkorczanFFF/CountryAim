@@ -9,6 +9,7 @@ import { describeReading, type Reading } from '~/i18n/reading';
 import { t } from '~/i18n/t';
 import type { Scan } from '~/scanner/detector';
 import { captureStill } from '~/scanner/freeze';
+import { createStabiliser } from '~/scanner/stabilise';
 import { useCamera } from '~/scanner/useCamera';
 import { useScanLoop } from '~/scanner/useScanLoop';
 import styles from './App.module.css';
@@ -22,14 +23,21 @@ export default function App() {
   const [video, setVideo] = useState<HTMLVideoElement | null>(null);
   const [frozen, setFrozen] = useState<Frozen | null>(null);
   const capturing = useRef(false);
+  // A streak of agreeing reads outlives renders and never appears on screen, so
+  // it is a ref and not state — nothing here should cause a render until it says
+  // the reading is settled.
+  const agreeing = useRef(createStabiliser());
 
   const onScan = useCallback(
     (scan: Scan) => {
       const reading = describeReading(scan);
-      // The check digit is the first of the two gates in §7.3; agreement between
-      // consecutive reads is M3. Stopping the screen on a single raw decode
-      // would hand the user a misread and make them dismiss it.
+      // The first of §7.3's two gates. A decode that fails mod 10 is not a
+      // reading, so it does not count towards agreement either.
       if (!reading.valid) return;
+      // The second: reads in a row that say the same thing. One decode off a
+      // creased label can pass the check digit by luck, and stopping the screen
+      // on it hands the user a wrong country to dismiss.
+      if (!agreeing.current.offer(scan.value, performance.now())) return;
       // The loop pauses on the state change, which is a frame or two away — the
       // decode that lands in between must not start a second capture.
       if (capturing.current || !video) return;

@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.4.0 - 2026-08-30 — Two reads that agree
+
+### Added
+
+- `scanner/stabilise.ts`, the second of §7.3's two gates: a decode becomes a reading only once
+  two in a row say the same thing, inside a one-second window. EAN-13 carries one check digit
+  and no other redundancy, so a symbol read badly — a crease, a glare, a hand moving — can land
+  on a number that passes mod 10 by luck. Two decodes landing on the *same* wrong number is a
+  different order of unlikely.
+
+### Changed
+
+- Both gates are now required before the screen stops. The check digit stays at the call site
+  rather than moving into the stabiliser, because a decode that fails mod 10 is not a reading
+  and must not count towards a streak either.
+
+### Notes
+
+- Time is a parameter of `offer`, not something the module reads for itself. The rules are then
+  testable without a clock: a streak at the edge of the window, a streak a millisecond past it,
+  a misread landing between two good reads.
+- Confirming ends the streak, so the decode arriving 80 ms later has to earn its own agreement
+  instead of inheriting what was already spent. That is half of the cooldown §7.3 asks for.
+  The other half is structural: the loop pauses the moment the frame freezes, so one view of
+  one code cannot produce two results.
+- N is two, where §7.3 says to start. Three is one argument away if misreads still get through
+  on a real phone, and costs one more decode — about 80 ms at the loop's twelve attempts a
+  second.
+- 8 tests, 75 in total: seven on the rules, one that a single decode leaves the screen alone.
+
 ## 0.3.9 - 2026-08-30 — A registration, not an origin
 
 ### Added
