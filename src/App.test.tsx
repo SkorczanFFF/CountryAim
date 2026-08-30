@@ -111,6 +111,18 @@ describe('App', () => {
     expect(screen.getAllByRole('listitem')).toHaveLength(11);
   });
 
+  it('stamps the build version over the camera', async () => {
+    withCamera();
+    render(<App />);
+    await waitFor(() => expect(loop.video).not.toBeNull());
+
+    // This lived only in the branch that renders when the camera fails, so the
+    // one screen people actually test on could not say which build it was. The
+    // deploy is a single address overwritten in place, which makes the version
+    // the only thing that tells a fresh build from a cached one.
+    expect(screen.getByText(`v${__APP_VERSION__}`)).toBeInTheDocument();
+  });
+
   it('freezes the frame and names the issuer on a reading that checks out', async () => {
     withCamera();
     render(<App />);

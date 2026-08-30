@@ -66,6 +66,11 @@ export default function App() {
         <p className={styles.mark}>
           <img className={styles.brand} src="/favicon.svg" alt="" />
           {t('app.name')}
+          {/* The nameplate carries the model number. Testing happens on one
+              branch address that is overwritten in place, so nothing else on
+              this screen can say whether it is the build just pushed or the one
+              the phone had cached. */}
+          <span className={styles.stamp}>v{__APP_VERSION__}</span>
         </p>
 
         {frozen ? (

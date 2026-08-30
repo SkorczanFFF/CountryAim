@@ -70,6 +70,20 @@
     letter-spacing: 0.42em;
   }
 
+  /* The model number on the nameplate. Mono and without the wordmark's tracking,
+     which would space four digits out into nonsense; the room the wordmark leaves
+     behind its own last letter is already most of the separation. Dimmed exactly
+     like .hint, so there is one value for secondary text over the camera rather
+     than a second one invented here — it falls behind the wordmark on size and on
+     colour, not on a number picked to taste. */
+  .stamp {
+    color: color-mix(in oklab, var(--chrome) 60%, transparent);
+    font-family: var(--font-mono);
+    letter-spacing: 0.08em;
+    /* `v0.3.8`, not `V0.3.8`: the wordmark's uppercase would carry over. */
+    text-transform: none;
+  }
+
   .hint {
     position: absolute;
     inset-inline: 0;

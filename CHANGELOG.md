@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.3.8 - 2026-08-30 — Which build is this
+
+### Changed
+
+- The version now sits on the nameplate over the camera, beside the wordmark, and not only on
+  the screen that comes up when the camera refuses to start. It was in exactly one place in
+  `App.tsx`, inside the branch nobody sees when the app works.
+
+### Notes
+
+- The reason is the deploy. Work is tested on one branch address that gets overwritten in
+  place, so the URL no longer says what is running behind it, and a phone holding the previous
+  build in cache looks exactly like one that is not. The version has always been meant to
+  answer "which build is this" during a phone test; until now it answered it on the wrong
+  screen.
+- Mono, without the wordmark's tracking, which would space four digits out into nonsense, and
+  dimmed exactly like the hint rather than by a second number picked to taste. It falls behind
+  the wordmark on size, and `text-transform: none` keeps it a lowercase `v` instead of
+  inheriting the nameplate's capitals.
+- 1 test, 65 in total. It pins the version to the camera view specifically, which is the half
+  that was missing.
+
 ## 0.3.7 - 2026-08-30 — The frame stops
 
 ### Added
